@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './index.less'
 import {
-    Form, Icon, Input, Button, Checkbox,
+    Form, Icon, Input, Button, Checkbox,message
 } from 'antd';
 
  class LoginForm extends Component {
@@ -13,6 +13,9 @@ import {
                 console.log('Received values of form: ', values);
             }else {
                 this.props.form.resetFields(['password']);
+                const errMsg = Object.values(err).reduce((prev, curr) => prev + curr.errors[0].message + ' ', '')
+                //提示错误
+                message.error(errMsg,2);
             }
         });
     }
