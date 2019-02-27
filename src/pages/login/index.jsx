@@ -1,9 +1,25 @@
 import React, {Component} from 'react';
 import LoginForm from '../../components/login-form';
+import {reqLogin} from '../../API'
 import logo from './logo.png'
 import './index.less'
 
 export default  class Login extends Component {
+    state = {
+        errMsg: ''
+    }
+    login=async(username, password)=>{
+      const value=  await reqLogin(username,password)
+      console.log(value.data.status);
+        console.log(value.data.msg);
+  if(value.data.status===0){
+      this.props.history.replace('/a')
+  }else {
+      this.setState({
+          errMsg: value.data.msg
+      })
+  }
+  }
   render () {
     return (
     <div className="login">
@@ -13,7 +29,7 @@ export default  class Login extends Component {
       </header>
       <section className="login-form">
         <h2>用户登录</h2>
-        <LoginForm/>
+        <LoginForm login={this.login}/>
       </section>
     </div>
     )
