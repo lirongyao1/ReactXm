@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import LoginForm from '../../components/login-form';
 import {reqLogin} from '../../API'
-import logo from './logo.png'
+import logo from '../../assets/images/logo.png'
+import {message} from 'antd'
 import './index.less'
 
 export default  class Login extends Component {
@@ -13,11 +14,12 @@ export default  class Login extends Component {
       console.log(value.data.status);
         console.log(value.data.msg);
   if(value.data.status===0){
-      this.props.history.replace('/a')
+      this.props.history.replace('/')
   }else {
       this.setState({
           errMsg: value.data.msg
       })
+      message.error(this.state.errMsg,2);
   }
   }
   render () {
