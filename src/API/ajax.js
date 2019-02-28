@@ -11,7 +11,7 @@ export default function (url,data,method='GET') {
  return promise
      .then((res)=>{
          console.log(res);
-         return res
+         return res.data
      })
      .catch((erro)=>{
         console.log('失败')
