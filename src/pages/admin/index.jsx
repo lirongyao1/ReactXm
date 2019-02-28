@@ -8,6 +8,7 @@ import Header from '../../components/header'
 import Category from '../category'
 import Footer from '../../components/footer'
 import MemoryUtils from '../../utils/memoryUtils'
+import Home from '../home'
 export default  class Admin extends Component {
   render () {
     const user= MemoryUtils.user
@@ -24,7 +25,10 @@ export default  class Admin extends Component {
           <Col span={20} className='hhh'>
               <Header/>
               <div className="admin-main">
-                  <Category/>
+                  <Switch>
+                      <Route path='/home' component={Home}/>
+                      <Route path='/category' component={Category}/>
+                  </Switch>
               </div>
               <Footer/>
           </Col>

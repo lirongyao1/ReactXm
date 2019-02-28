@@ -1,11 +1,46 @@
 import React, {Component} from 'react';
-import {Row, Col, Modal} from 'antd';
+import {Row, Col, Modal,message} from 'antd';
 import {withRouter} from 'react-router-dom';
+import dayjs from 'dayjs'
 import './index.less'
+import {reqWeather}  from '../../API'
 import MemoryUtils from '../../utils/memoryUtils'
 import {removeItem} from '../../utils/storageUtils';
 import menuList from '../../config/menuConfig';
 class Header extends Component {
+    state={
+        sysTime:dayjs().format('YYYY-MM-DD-HH:mm:ss'),
+        dayPictureUrl: 'http://api.map.baidu.com/images/weather/day/qing.png',
+        weather: '晴11'
+    }
+    componentDidMount(){
+        this.updateTime()
+        this.getWeather('北京');
+    }
+    getWeather=(pp)=>{
+        const oo=pp
+        reqWeather(oo)
+            .then(res=>{
+                console.log(1)
+                this.setState({
+                    dayPictureUrl: res.dayPictureUrl,
+                    weather: res.weather
+                })
+            })
+            .catch(err=>{
+                message.error(err);
+            })
+    }
+    updateTime=()=>{
+      this.intervalID=  setInterval(()=>{
+            this.setState({
+                sysTime:dayjs().format('YYYY-MM-DD-HH:mm:ss')
+            })
+        },1000)
+    }
+    componentWillUnmout(){
+        clearInterval(this.intervalID)
+    }
     logOut = () => {
         Modal.confirm({
             title: '您确认要退出登录吗?',
@@ -41,6 +76,7 @@ class Header extends Component {
       }
     }
   render () {
+        const {sysTime,dayPictureUrl,weather}=this.state
       const {_id}=MemoryUtils.user
       const title=this.getTile(menuList)
     return (
@@ -51,7 +87,7 @@ class Header extends Component {
       </Row>
       <Row className='header-bottom'>
         <Col span={6} className='header-bottom-left'>{title}</Col>
-        <Col span={18} className='header-bottom-right'>时间 + 天气</Col>
+        <Col span={18} className='header-bottom-right'>{sysTime} <span>{weather}</span><img src={dayPictureUrl} alt="天气"></img></Col>
       </Row>
       </div>
     )

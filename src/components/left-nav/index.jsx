@@ -15,6 +15,7 @@ const Item = Menu.Item;
         return menu.map(item=>{
             if(item.children){
                const {pathname}=this.props.location
+                //find的返回值完全在回调函数中是怎么处理的
               const result= item.children.find((item)=>{
                     return item.key===pathname
                 })
