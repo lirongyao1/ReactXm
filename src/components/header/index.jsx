@@ -17,11 +17,10 @@ class Header extends Component {
         this.updateTime()
         this.getWeather('北京');
     }
-    getWeather=(pp)=>{
-        const oo=pp
+    getWeather=(oo)=>{
         reqWeather(oo)
             .then(res=>{
-                console.log(1)
+                console.log(res)
                 this.setState({
                     dayPictureUrl: res.dayPictureUrl,
                     weather: res.weather

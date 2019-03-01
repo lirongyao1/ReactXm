@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
-import {Row, Col} from 'antd';
+import {Row, Col,Layout} from 'antd';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import LeftNav from '../../components/left-nav'
-import './index.less'
 import {getItem} from '../../utils/storageUtils'
 import Header from '../../components/header'
 import Category from '../category'
 import Footer from '../../components/footer'
 import MemoryUtils from '../../utils/memoryUtils'
 import Home from '../home'
+const {
+     Content, Sider
+} = Layout
 export default  class Admin extends Component {
   render () {
     const user= MemoryUtils.user
@@ -18,21 +20,21 @@ export default  class Admin extends Component {
         return <Redirect to="/login"/>
       }
     return (
-        <Row className='admin'>
-          <Col span={4} className='hh'>
+        <Layout style={{ minHeight: '100vh' }}>
+            <Sider>
             <LeftNav/>
-          </Col>
-          <Col span={20} className='hhh'>
+            </Sider>
+            <Layout>
               <Header/>
-              <div className="admin-main">
+                <Content style={{margin: 18}}>
                   <Switch>
                       <Route path='/home' component={Home}/>
                       <Route path='/category' component={Category}/>
                   </Switch>
-              </div>
-              <Footer/>
-          </Col>
-        </Row>
+                </Content>
+              <Footer />
+          </Layout>
+        </Layout>
     )
   }
 }
