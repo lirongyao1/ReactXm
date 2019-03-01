@@ -5,7 +5,6 @@ export default function (url,data,method='GET') {
     if(method==='GET'){
         promise=   axios.get(url,{params:data})
     }else if(method==='POST'){
-        console.log(data);
      promise=   axios.post(url,data)
     }
  return promise

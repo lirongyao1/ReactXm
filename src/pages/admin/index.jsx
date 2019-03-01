@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Row, Col,Layout} from 'antd';
+import {Layout} from 'antd';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import LeftNav from '../../components/left-nav'
-import {getItem} from '../../utils/storageUtils'
+// import {getItem} from '../../utils/storageUtils'
 import Header from '../../components/header'
 import Category from '../category'
 import Footer from '../../components/footer'
@@ -16,7 +16,6 @@ export default  class Admin extends Component {
     const user= MemoryUtils.user
       console.log(user);
       if(!user||!user._id){
-          console.log('sss',user)
         return <Redirect to="/login"/>
       }
     return (

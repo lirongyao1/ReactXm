@@ -1,7 +1,6 @@
 import ajax from './ajax'
 import jsonp from 'jsonp'
 export function reqLogin(username,password) {
-    console.log(username, password);
   return  ajax('/login',{username,password},'POST')
 }
 export function reqAddUser(use) {
@@ -30,3 +29,4 @@ export const reqCategories = parentId => {
    return ajax('/manage/category/list',{parentId})
 }
 export const reqAddCategory = (parentId, categoryName) => ajax('/manage/category/add', {parentId, categoryName}, 'POST')
+export const reqUpdateCategoryName = (categoryId, categoryName) => ajax('/manage/category/update', {categoryId, categoryName}, 'POST');
