@@ -23,7 +23,7 @@ const Option = Select.Option;
                     {
                         initialValue: '0'
                     }
-                )( <Select defaultValue="0"  >
+                )( <Select >
                     <Option value="0"> 一级类表</Option>
                     {
                         categories.map((item)=>{

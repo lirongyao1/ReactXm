@@ -30,3 +30,4 @@ export const reqCategories = parentId => {
 }
 export const reqAddCategory = (parentId, categoryName) => ajax('/manage/category/add', {parentId, categoryName}, 'POST')
 export const reqUpdateCategoryName = (categoryId, categoryName) => ajax('/manage/category/update', {categoryId, categoryName}, 'POST');
+export const reqProductsList = (pageNum, pageSize) => ajax( '/manage/product/list', {pageNum, pageSize})

@@ -3,7 +3,6 @@ import { Card, Button, Icon, Table,message, Modal } from 'antd';
 import AddCategoryForm from '../../components/add-category-form'
 import {reqAddCategory,reqCategories,reqUpdateCategoryName} from '../../API'
 import UpdateCategoryNameForm from '../../components/update-category-name-form'
-
     export default class Category extends Component {
     state={
         categories:[],
@@ -22,7 +21,6 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
         }else {
             // const result= await reqUpdateCategoryName(categoryName,_id)
             const result = await reqUpdateCategoryName(_id, categoryName);
-            console.log(result);
             if (result.status===0){
                 message.success('修改分类名称成功')
                 this.setState({
@@ -102,7 +100,7 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
                         const {parentId} = this.state;
                         if(parentId==='0'){
                             return   <div>
-                                <a href="javascript:void(0)" onClick={()=>this.setState({isShowUpdate:true,category})}>修改名称</a> &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0)"  onClick={()=>this.setState({isShowUpdate:true,category})}>修改名称</a> &nbsp;&nbsp;&nbsp;
                                 <a href="javascript:void(0)" onClick={()=>{
                                     this.setState({parentName:category.name})
                                     this.getCategories(category._id)
