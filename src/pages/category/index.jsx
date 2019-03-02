@@ -9,7 +9,10 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
         categories:[],
         isShowAdd: false,
         isShowUpdate:false,
-        category:{}
+        category:{},
+        subCategories:[],
+        parentName: '',
+        parentId:'0'
     }
     updateCategoryName= async()=>{
         const categoryName = this.form.getFieldValue('categoryName');
@@ -29,6 +32,12 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
                             item.name=categoryName
                         }
                         return item
+                    }),
+                    subCategories:this.state.subCategories.map((item)=>{
+                        if(item._id===_id){
+                            item.name=categoryName
+                        }
+                        return item
                     })
                 })
             }else {
@@ -43,10 +52,19 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
         const result = await reqCategories(parentId);
         console.log(result);
         if(result.status===0){
-            this.setState({
-                categories:result.data
-            })
-            console.log(this.state);
+            if(parentId==='0'){
+                this.setState({
+                    categories:result.data,
+                    parentId
+                })
+            }else {
+                this.setState({
+                    subCategories:result.data,
+                    parentId
+                })
+            }
+
+
         }else {
             message.error('获取分类列表数据失败~');
         }
@@ -54,18 +72,22 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
         addCategory = async()=>{
             const {parentId, categoryName} = this.form.getFieldsValue();
             const result = await reqAddCategory(parentId, categoryName);
+            let updateState = {isShowAdd: false};
             if (result.status ===0){
                 message.success('添加分类成功~');
-                this.setState({
-                    categories: [...this.state.categories, result.data],
-                    isShowAdd: false
-                })
+                const currentId = this.state.parentId;
+               if(parentId === '0'){
+                   updateState.categories = [...this.state.categories, result.data];
+               }else {
+                   if(currentId === parentId){
+                       updateState.subCategories = [...this.state.subCategories, result.data];
+                   }
+               }
             }else {
                 message.error('添加分类失败~');
-                this.setState({
-                    isShowAdd: false
-                })
             }
+            this.form.resetFields();
+            this.setState(updateState);
         }
         componentWillMount(){
             this.columns = [
@@ -77,10 +99,19 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
                     title: '操作',
                     width: 300,
                     render: category => {
-                        return <div>
-                        <a href="javascript:void(0)" onClick={()=>this.setState({isShowUpdate:true,category})}>修改名称</a> &nbsp;&nbsp;&nbsp;
-                        <a href="javascript:void(0)">查看其子品类</a>
-                    </div>
+                        const {parentId} = this.state;
+                        if(parentId==='0'){
+                            return   <div>
+                                <a href="javascript:void(0)" onClick={()=>this.setState({isShowUpdate:true,category})}>修改名称</a> &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0)" onClick={()=>{
+                                    this.setState({parentName:category.name})
+                                    this.getCategories(category._id)
+                                }
+                                }>查看其子品类</a>
+                            </div>
+                        }else {
+                            return <a href="javascript:void(0)" onClick={()=>this.setState({isShowUpdate:true,category})}>修改名称</a>
+                        }
                 }
             }];
         }
@@ -88,16 +119,24 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
       this.getCategories('0')
     }
     render () {
-        const {categories,isShowAdd,isShowUpdate,category} = this.state
-
+        const {categories,isShowAdd,isShowUpdate,category,parentId,subCategories,parentName} = this.state
+const isCategory=parentId==='0'
+        const data = isCategory ? categories : subCategories;
+        console.log(data,parentId);
         return (
             <Card
-                title="一级分类列表"
+                title={
+                    isCategory
+                        ? '一级分类列表'
+                        : <div><span>一级分类列表&nbsp;&nbsp;</span><a href="javascript:void(0)" onClick={() => {
+                        this.setState({parentId: '0'})
+                        }} ><Icon type="arrow-right" />&nbsp;&nbsp;{parentName}</a></div>
+                }
                 extra={<Button type='primary' onClick={()=>this.setState({isShowAdd:true})}><Icon type="plus" />添加品类</Button>}
             >
               <Table
                   columns={this.columns}
-                  dataSource={categories}
+                  dataSource={data}
                   bordered
                   pagination={{
                       pageSize: 3,
