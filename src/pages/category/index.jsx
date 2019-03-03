@@ -11,7 +11,8 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
         category:{},
         subCategories:[],
         parentName: '',
-        parentId:'0'
+        parentId:'0',
+        isSubCategoriesLoading:true
     }
     updateCategoryName= async()=>{
         const categoryName = this.form.getFieldValue('categoryName');
@@ -56,10 +57,20 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
                     parentId
                 })
             }else {
-                this.setState({
-                    subCategories:result.data,
-                    parentId
-                })
+                if(result.data.length){
+                    this.setState({
+                        subCategories:result.data,
+                        isSubCategoriesLoading:true,
+                        parentId,
+                    })
+                }else {
+                    this.setState({
+                        subCategories:result.data,
+                        parentId,
+                        isSubCategoriesLoading:false
+                    })
+                }
+
             }
 
 
@@ -117,9 +128,10 @@ import UpdateCategoryNameForm from '../../components/update-category-name-form'
       this.getCategories('0')
     }
     render () {
-        const {categories,isShowAdd,isShowUpdate,category,parentId,subCategories,parentName} = this.state
+        const {isSubCategoriesLoading,categories,isShowAdd,isShowUpdate,category,parentId,subCategories,parentName} = this.state
 const isCategory=parentId==='0'
         const data = isCategory ? categories : subCategories;
+        const isLoading=isCategory?categories.length===0:isSubCategoriesLoading&&subCategories.length===0;
         console.log(data,parentId);
         return (
             <Card
@@ -143,7 +155,7 @@ const isCategory=parentId==='0'
                       showQuickJumper: true
                   }}
                   rowKey='_id'
-                  loading={categories.length === 0}
+                  loading={isLoading}
               />
                 <Modal
                     title="更新分类"

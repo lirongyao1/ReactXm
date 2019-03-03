@@ -6,7 +6,7 @@ export function reqLogin(username,password) {
 export function reqAddUser(use) {
   return  ajax('/',use,'POST')
 }
-export  const reqWeather=city=>{
+export  const reqWeather=(city='北京')=> {
     return new Promise((resolve,reject)=>{
         jsonp(
             `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`,

@@ -15,10 +15,10 @@ class Header extends Component {
     }
     componentDidMount(){
         this.updateTime()
-        this.getWeather('北京');
+        this.getWeather();
     }
-    getWeather=(oo)=>{
-        reqWeather(oo)
+    getWeather=(o)=>{
+        reqWeather(o)
             .then(res=>{
                 console.log(res)
                 this.setState({

@@ -7,7 +7,7 @@ import Header from '../../components/header'
 import Category from '../category'
 import Footer from '../../components/footer'
 import MemoryUtils from '../../utils/memoryUtils'
-import Product from '../produsct'
+import Product from '../produsct/product'
 import Home from '../home'
 const {
      Content, Sider
@@ -31,6 +31,7 @@ export default  class Admin extends Component {
                       <Route path='/home' component={Home}/>
                       <Route path='/category' component={Category}/>
                       <Route path='/product' component={Product}/>
+                      {/*<Redirect to='/home'/>*/}
                   </Switch>
                 </Content>
               <Footer />

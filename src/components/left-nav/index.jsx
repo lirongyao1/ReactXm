@@ -16,9 +16,9 @@ const Item = Menu.Item;
             if(item.children){
                const {pathname}=this.props.location
                 //find的返回值完全在回调函数中是怎么处理的
-              const result= item.children.find((item)=>{
-                    return item.key===pathname
-                })
+              const result= item.children.find((item)=>
+                    pathname.indexOf(item.key)===0
+                )
                 if(result){
                     this.openKey = item.key
                 }
@@ -38,7 +38,15 @@ return  <SubMenu key={item.key} title={<span><Icon type={item.icon} />{item.titl
         })
     }
   render () {
-      const {pathname} = this.props.location;
+     let {pathname} = this.props.location;
+     if(/^\/product/.test(pathname)){
+         pathname='/product'
+     }else if (/^\/charts/.test(pathname)){
+         pathname='/charts'
+     }else if (/^\/saveupdate/.test(pathname)){
+         pathname='/saveupdate'
+     }
+
     return (
     <div className="left-nav">
         <NavLink to='/admin'>
