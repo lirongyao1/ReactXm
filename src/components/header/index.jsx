@@ -57,6 +57,9 @@ class Header extends Component {
     }
     getTile=(menu)=>{
         const {pathname} = this.props.location;
+        if(pathname.indexOf('/product')===0){
+            return '商品管理'
+        }
       for(var i=0;i<menu.length;i++){
         let item=menu[i]
         if(item.children){

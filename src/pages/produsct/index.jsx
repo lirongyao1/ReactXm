@@ -1,12 +1,15 @@
 
 import React, {Component} from 'react';
-import {reqProductsList} from '../../API'
+import {reqProductsList,reqSearchProductsList} from '../../API'
 import {Card, Button, Icon, Table, Select, Input, message} from 'antd';
 const Option = Select.Option;
 export default  class Index extends Component {
     state={
         products: [],
-        total: 0
+        total: 0,
+        searchType: 'productName',
+        searchName: '',
+        isSubCategoriesLoading:true
     }
     componentWillMount(){
         this.columns = [
@@ -50,31 +53,68 @@ export default  class Index extends Component {
         ];
     }
     getProducts=async(pageNum, pageSize)=>{
-        const result= await reqProductsList(pageNum, pageSize)
-        if (result.status ===0){
-            this.setState({
-                products:result.data.list,
-                total:result.data.total
-            })
-        }else {
-            message.error('加载失败')
+        const {searchName, searchType} = this.state;
+        let result;
+
+        if (searchName) {
+            result = await reqSearchProductsList({searchName, searchType, pageNum, pageSize});
+        } else {
+            result = await reqProductsList(pageNum, pageSize);
         }
+        console.log(result)
+        if (result.status === 0) {
+            if (result.data.list.length!==0){
+                this.setState({
+                    products: result.data.list,
+                    total: result.data.total,
+                    isSubCategoriesLoading:true
+                })
+            }else {
+                this.setState({
+                    products: result.data.list,
+                    total: result.data.total,
+                    isSubCategoriesLoading:false
+                })
+            }
+
+        } else {
+            message.error('获取分页商品数据失败');
+        }
+        console.log(this.state.products);
     }
+    handleChange=(name,value)=>{
+        this.setState({
+            [name]: value
+        })
+    }
+    // getProducts=async(pageNum, pageSize)=>{
+    //     const result= await reqProductsList(pageNum, pageSize)
+    //     if (result.status ===0){
+    //         this.setState({
+    //             products:result.data.list,
+    //             total:result.data.total
+    //         })
+    //     }else {
+    //         message.error('加载失败')
+    //     }
+    // }
     componentDidMount(){
         this.getProducts(1,3)
     }
     render () {
-        const {products,total}=this.state
+        const {products,total,isSubCategoriesLoading}=this.state
+        let isLoading=products.length?products.length===0:isSubCategoriesLoading
+        console.log(isSubCategoriesLoading);
         return (
             <Card
                 title={
                     <div>
-                        <Select value='1'>
-                            <Option value='1'>根据商品名称</Option>
-                            <Option value='2'>根据商品描述</Option>
+                        <Select defaultValue='productName' onChange={value => this.handleChange('searchType', value)}>
+                            <Option value='productName' >根据商品名称</Option>
+                            <Option value='productDesc'>根据商品描述</Option>
                         </Select>
-                        <Input placeholder='关键字' style={{width: 200, marginLeft: 10, marginRight: 10}}/>
-                        <Button type='primary'>搜索</Button>
+                        <Input placeholder='关键字' onChange={e => this.handleChange('searchName', e.target.value)} style={{width: 200, marginLeft: 10, marginRight: 10}}/>
+                        <Button type='primary' onClick={() => this.getProducts(1, 3)}>搜索</Button>
                     </div>
                 }
                 extra={<Button type='primary'><Icon type='plus'/>添加产品</Button>}
@@ -93,7 +133,7 @@ export default  class Index extends Component {
                         onShowSizeChange: this.getProducts
                     }}
                     rowKey='_id'
-                    loading={products.length === 0}
+                    loading={isLoading}
                 />
             </Card>
         )
